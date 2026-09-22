@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CyberMirror | Threat Intelligence Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-wrap">
+          <div class="brand-mark">CM</div>
+          <div>
+            <p class="eyebrow">Cyber Defense</p>
+            <h1>CyberMirror</h1>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <button class="nav-item active">
+            <span>◈</span>
+            Dashboard
+          </button>
+          <button class="nav-item" id="threatAnalyticsNavButton" type="button">
+            <span>⌁</span>
+            Threat Analytics
+          </button>
+          <button class="nav-item">
+            <span>◎</span>
+            Threat Intel
+          </button>
+          <button class="nav-item" id="reportsNavButton" type="button">
+            <span>▤</span>
+            Reports
+          </button>
+        </nav>
+
+        <div class="status-card">
+          <div class="status-header">
+            <span class="live-dot"></span>
+            Simulation Active
+          </div>
+          <strong>Threat Grid: Medium</strong>
+          <p>8 attack scenarios currently running in isolated virtual range.</p>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow muted">Operations overview</p>
+            <h2>Security Command Center</h2>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost-btn login-btn" id="loginButton" type="button">Log in</button>
+            <button class="ghost-btn">Export Report</button>
+            <button class="primary-btn">Run Scenario</button>
+          </div>
+        </header>
+
+        <section class="hero-grid">
+          <div class="hero-card">
+            <div class="hero-copy">
+              <p class="eyebrow">Threat detection</p>
+              <h3>AI-driven attack monitoring is maintaining a stable security posture.</h3>
+              <p>
+                Active monitoring across web services, endpoints, and user access pathways indicates
+                rapid detection and containment for the current attack surface.
+              </p>
+            </div>
+          </div>
+
+          <div class="mini-card">
+            <div class="mini-header">
+              <span class="eyebrow">AI assistant</span>
+              <span class="online-pill">Online</span>
+            </div>
+            <p>“Potential brute-force activity detected across finance-user accounts. Recommend MFA enforcement and account lockout.”</p>
+          </div>
+        </section>
+
+        <section class="panel url-scanner-panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow muted">URL threat check</p>
+              <h3>Submit a URL for analysis</h3>
+            </div>
+            <span class="scanner-status" id="scannerStatus">Ready to submit</span>
+          </div>
+          <form class="url-scanner-form" id="urlScannerForm">
+            <div class="url-inputs">
+              <label class="sr-only" for="urlInput">URL to test</label>
+              <input id="urlInput" name="url" type="url" placeholder="Enter a URL to analyze" autocomplete="off" required />
+              <label class="sr-only" for="urlscanApiKey">urlscan.io API key</label>
+              <input id="urlscanApiKey" name="apiKey" type="password" placeholder="Enter your urlscan.io API key" autocomplete="off" required />
+            </div>
+            <button class="primary-btn" type="submit">Submit URL</button>
+          </form>
+          <div class="scan-result" id="scanResult" aria-live="polite">
+            <span class="scan-result-icon">+</span>
+            <div>
+              <strong>Waiting for a URL</strong>
+              <p>Your API key is used only for this request and is not stored.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="content-grid">
+          <div class="panel analytics-panel" id="threatAnalyticsSection">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow muted">Threat analytics</p>
+                <h3>URL scan analytics</h3>
+              </div>
+            </div>
+            <div class="url-scan-results" id="analyticsUrlScanResults"></div>
+          </div>
+
+          <div class="panel donut-panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow muted">Risk breakdown</p>
+                <h3>Threat categories</h3>
+              </div>
+            </div>
+            <div class="donut-wrap">
+              <div class="donut-chart" id="donutChart">
+                <div class="donut-center">
+                  <strong id="donutScore">0%</strong>
+                  <span id="donutLabel">No scans</span>
+                </div>
+              </div>
+              <ul class="legend" id="legendList"></ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="bottom-grid">
+          <div class="panel table-panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow muted">Threat summary</p>
+                <h3>Detected attack events</h3>
+              </div>
+              <button class="tag-btn">View all</button>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>URL</th>
+                  <th>Domain</th>
+                  <th>Severity</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="threatTableBody"></tbody>
+            </table>
+          </div>
+
+          <div class="panel side-panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow muted">Recommended actions</p>
+                <h3>Defense guidance</h3>
+              </div>
+            </div>
+            <div class="recommendations" id="recommendations"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="report-backdrop" id="reportBackdrop" hidden>
+      <section class="report-modal" role="dialog" aria-modal="true" aria-labelledby="reportTitle">
+        <button class="modal-close" id="closeReportButton" type="button" aria-label="Close threat report">&times;</button>
+        <div class="report-heading">
+          <p class="eyebrow">Security report</p>
+          <h2 id="reportTitle">Detected threats and prevention</h2>
+          <p>Review each detected event and apply the recommended control to reduce repeat exposure.</p>
+        </div>
+        <div class="report-summary">
+          <strong id="reportThreatCount">5</strong>
+          <span>events requiring review</span>
+        </div>
+        <div class="report-list" id="reportList"></div>
+        <div class="url-scan-results report-url-results" id="reportUrlScanResults"></div>
+      </section>
+    </div>
+
+    <div class="auth-backdrop" id="authBackdrop" hidden>
+      <section class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+        <button class="modal-close" id="closeAuthButton" type="button" aria-label="Close login window">&times;</button>
+        <div class="auth-heading">
+          <p class="eyebrow">Secure access</p>
+          <h2 id="authTitle">Welcome back</h2>
+          <p id="authDescription">Sign in to continue to your security command center.</p>
+        </div>
+
+        <div class="auth-tabs" role="tablist" aria-label="Account access">
+          <button class="auth-tab active" id="loginTab" type="button" role="tab" aria-selected="true">Log in</button>
+          <button class="auth-tab" id="registerTab" type="button" role="tab" aria-selected="false">Create account</button>
+        </div>
+
+        <form class="auth-form" id="authForm">
+          <div class="form-field register-only" hidden>
+            <label for="fullName">Full name</label>
+            <input id="fullName" name="fullName" type="text" autocomplete="name" placeholder="Jordan Lee" />
+          </div>
+          <div class="form-field">
+            <label for="email">Work email</label>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="you@company.com" required />
+          </div>
+          <div class="form-field">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" minlength="8" required />
+          </div>
+          <div class="form-field register-only" hidden>
+            <label for="confirmPassword">Confirm password</label>
+            <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" placeholder="Repeat your password" minlength="8" />
+          </div>
+          <label class="checkbox-field login-only">
+            <input type="checkbox" name="remember" />
+            <span>Keep me signed in</span>
+          </label>
+          <p class="form-message" id="formMessage" aria-live="polite"></p>
+          <button class="primary-btn auth-submit" id="authSubmit" type="submit">Log in securely</button>
+        </form>
+      </section>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
